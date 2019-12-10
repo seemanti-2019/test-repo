@@ -16,28 +16,8 @@ class Dashboard extends React.Component {
             lat : '13.0827',
             lng : '80.2707'
         };
-       // console.log(this.props.username);
-    }    
-    
-    buttonClick(val){
-        console.log(val);
-        debugger;
-        this.myLatLng = {
-            lat : val.lat,
-            lng : val.lng
-        }
-        if(this.props.google){
-            this.setState({lat: val.lat, lng: val.lng});
-          //  console.log(this.props.google);
-           // console.log(this.myLatLng);
-
-        }        
-        
-    }
-    
-      
-    render() {
-        let cityList = [
+        this.displayMarker = <Marker position={this.state} />;
+        this.cityList = [
             {
                 id : 1, 
                 name : 'Delhi',
@@ -88,17 +68,40 @@ class Dashboard extends React.Component {
             },       
     
         ];
-        var cityNames = cityList.map(data => {
+       // console.log(this.props.username);
+    }    
+    
+    buttonClick(val){
+        console.log(val);
+        if (this.props.google) {
+            this.setState({ lat: val.lat, lng: val.lng });
+            this.displayMarker = <Marker key={val.id} position={{ lat: val.lat, lng: val.lng }} />;
+        }
+    }
+    
+    render() {        
+        var cityNames = this.cityList.map(data => {
             return (
                 <ListGroup.Item key={data.id} id={data.id} action onClick={() => this.buttonClick(data)}>{data.name}</ListGroup.Item>
             );
         })
         
-        let displayMarkers = cityList.map(data => {
-            return (
-                <Marker key={data.id} position={{ lat : data.lat, lng : data.lng}} />
-            );
-        })
+        var setMode = (event) => {
+            console.log(event.target.value);
+            if(event.target.value === '2'){
+                this.displayMarker = this.cityList.map(data => {
+                    this.setState({ lat: data.lat, lng: data.lng });
+                    return (
+                        <Marker key={data.id} position={{ lat : data.lat, lng : data.lng}} />
+                    );
+                })
+            } else {
+                this.setState({ lat: '13.0827', lng: '80.2707' });
+                this.displayMarker = <Marker key={4} position={this.state} />;                
+            }
+        }      
+        
+        
         var points = [
             { lat: 22.02, lng: 77.01 },
             { lat: 22.03, lng: 77.02 },
@@ -116,7 +119,7 @@ class Dashboard extends React.Component {
                     <Row>
                         <Col><h3>Hello {this.props.username} </h3></Col>
                         <Col>
-                            <ButtonGroup toggle className="mt-1">
+                            <ButtonGroup toggle className="mt-1" onChange={setMode.bind(this)}>
                                 <ToggleButton id="displaySingle" type="radio" name="radio" defaultChecked value="1">
                                     Single
                                 </ToggleButton>
@@ -142,8 +145,7 @@ class Dashboard extends React.Component {
                             initialCenter={this.state}
                             // bounds={bounds}
                         >
-                        <Marker position={this.state} />
-                        {/*displayMarkers*/}
+                            {this.displayMarker}
                         </Map>
                     </Col>
                 </Row>               
