@@ -8,28 +8,28 @@ const mapStyles = {
     height: '100%'
 }
 
-let myLatLng = {
-    lat: '28.7041',
-    lng: '77.1025'
-};
-   
 class Dashboard extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            lat : '13.0827',
+            lng : '80.2707'
+        };
        // console.log(this.props.username);
     }    
     
     buttonClick(val){
         console.log(val);
-        
+        debugger;
         this.myLatLng = {
             lat : val.lat,
             lng : val.lng
         }
         if(this.props.google){
-            console.log(this.props.google);
-            console.log(this.myLatLng);
+            this.setState({lat: val.lat, lng: val.lng});
+          //  console.log(this.props.google);
+           // console.log(this.myLatLng);
 
         }        
         
@@ -116,7 +116,7 @@ class Dashboard extends React.Component {
                     <Row>
                         <Col><h3>Hello {this.props.username} </h3></Col>
                         <Col>
-                            <ButtonGroup toggle className="mt-2">
+                            <ButtonGroup toggle className="mt-1">
                                 <ToggleButton id="displaySingle" type="radio" name="radio" defaultChecked value="1">
                                     Single
                                 </ToggleButton>
@@ -137,13 +137,13 @@ class Dashboard extends React.Component {
                     <Col>
                         <Map id="mymap"
                             google={this.props.google}
-                            zoom={5}
+                            zoom={4}
                             style={mapStyles}
-                            initialCenter={{ lat: 22.5726, lng: 77.3639 }}
-                            bounds={bounds}
+                            initialCenter={this.state}
+                            // bounds={bounds}
                         >
-                        <Marker position={myLatLng} />
-                            {/*displayMarkers*/}
+                        <Marker position={this.state} />
+                        {/*displayMarkers*/}
                         </Map>
                     </Col>
                 </Row>               
